@@ -1,0 +1,31 @@
+#container {
+    display: grid;
+    grid-template-columns: repeat(20, 30px);
+    gap: 1px;
+    
+}
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 7rem;
+    font-family: Arial, sans-serif;
+}
+
+
+/* button {
+    padding: 10px;
+    cursor: pointer;
+} */
