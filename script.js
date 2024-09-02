@@ -39,6 +39,8 @@ function checkHorizontalLine(id) {
     }
     return false;
 }
+
+
 function checkVerticalLine(id) {
     const board = Array.from(document.getElementsByClassName('cell')).map(cell => cell.innerHTML);
     const index = parseInt(id);
@@ -112,8 +114,6 @@ function checkDiagonalLine(id) {
 
     return false;
 }
-
-
 
 
 function positiondetector(id) {
