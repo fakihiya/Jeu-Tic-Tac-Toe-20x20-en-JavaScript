@@ -64,6 +64,12 @@ function checkVerticalLine(id) {
 
 function checkDiagonalLine(id) {
     const board = Array.from(document.getElementsByClassName('cell')).map(cell => cell.innerHTML);
+    // Array.from(...): Converts the HTMLCollection into an array.
+
+    //This line creates an array called board that contains the current
+    // state of all the cells on the board. Each cell's inner HTML (which is either 'X', 'O', or an empty string)
+    // is mapped to the array
+
     const index = parseInt(id);
     const symbol = board[index];
     const size = 20; // Board is 20x20
@@ -120,20 +126,26 @@ function positiondetector(id) {
     let element = document.getElementById(id);
 
     if (element.innerHTML === '') {
-        element.innerHTML = player;
+        element.innerHTML = player; // Display the current player's symbol first
+
+        // Now check for a winning condition or a draw
         if (checkHorizontalLine(id) || checkVerticalLine(id) || checkDiagonalLine(id)) {
-            alert(`Le joueur ${player} a gagné !`);
-            restartGame();
+            setTimeout(() => {
+                alert(`Le joueur ${player} a gagné !`);
+                restartGame();
+            }, 10); // Adding a slight delay to ensure the last move is shown
         } else if (checkDraw()) {
-            alert("Match nul !");
-            restartGame();
+            setTimeout(() => {
+                alert("Match nul !");
+                restartGame();
+            }, 10);
         } else {
-            player = player === 'x' ? 'o' : 'x';
+            player = player === 'x' ? 'o' : 'x'; // Switch player
         }
         saveGameToStorage();
-        
     }
 }
+
 
 function checkDraw() {
     return Array.from(document.getElementsByClassName('cell')).every(cell => cell.innerHTML !== '');
@@ -153,16 +165,3 @@ function saveGameToStorage() {
     // Converts this array into a JSON string.
     // Stores the JSON string in localStorage under the key 'ticTacToeState'
 }
-
-// function loadGameFromStorage() {
-//     const savedState = localStorage.getItem('ticTacToeState');
-//     const savedPlayer = localStorage.getItem('ticTacToePlayer');
-    
-//     if (savedState && savedPlayer) {
-//         const cells = JSON.parse(savedState);
-//         cells.forEach((value, index) => {
-//             document.getElementById(index).innerHTML = value;
-//         });
-//         player = savedPlayer;
-//     }
-// }
