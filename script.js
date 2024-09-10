@@ -1,8 +1,13 @@
 let player = 'x';
+let playerXScore = 0;
+let playerOScore = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     const gameBoard = document.getElementById('container');
     const restartButton = document.getElementById('restartButton');
+
+    // Load scores from localStorage
+    loadScoresFromStorage();
 
     function game() {
         for (let i = 0; i < 400; i++) {
@@ -13,20 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.dataset.index = i;
             gameBoard.appendChild(cell);
         }
-        // loadGameFromStorage();
     }
     game();
     restartButton.addEventListener('click', restartGame);
-
-
 });
 
 function checkHorizontalLine(id) {
     const board = Array.from(document.getElementsByClassName('cell')).map(cell => cell.innerHTML);
     const index = parseInt(id);
     const symbol = board[index];
-    const rowStart = Math.floor(index / 20) * 20;  
-    // console.log(board[index]);
+    const rowStart = Math.floor(index / 20) * 20;
 
     let count = 0;
     for (let i = 0; i < 20; i++) {
@@ -40,45 +41,33 @@ function checkHorizontalLine(id) {
     return false;
 }
 
-
 function checkVerticalLine(id) {
     const board = Array.from(document.getElementsByClassName('cell')).map(cell => cell.innerHTML);
     const index = parseInt(id);
     const symbol = board[index];
-    const colStart = index % 20; 
-    //  console.log(colStart);
-    //  console.log(index);
+    const colStart = index % 20;
 
     let count = 0;
-    for (let i = 0; i < 400; i += 20) { 
+    for (let i = 0; i < 400; i += 20) {
         if (board[colStart + i] === symbol) {
             count++;
-            if (count === 5) return true; 
+            if (count === 5) return true;
         } else {
-            count = 0; 
+            count = 0;
         }
     }
-    return false; 
+    return false;
 }
-
 
 function checkDiagonalLine(id) {
     const board = Array.from(document.getElementsByClassName('cell')).map(cell => cell.innerHTML);
-    // Array.from(...): Converts the HTMLCollection into an array.
-
-    //This line creates an array called board that contains the current
-    // state of all the cells on the board. Each cell's inner HTML (which is either 'X', 'O', or an empty string)
-    // is mapped to the array
-
     const index = parseInt(id);
     const symbol = board[index];
-    const size = 20; // Board is 20x20
+    const size = 20;
 
-    // Check diagonal from top-left to bottom-right
     let row = Math.floor(index / size);
     let col = index % size;
 
-    // Move to the top-left most position of the diagonal
     while (row > 0 && col > 0) {
         row--;
         col--;
@@ -96,11 +85,9 @@ function checkDiagonalLine(id) {
         col++;
     }
 
-    // Check diagonal from top-right to bottom-left
     row = Math.floor(index / size);
     col = index % size;
 
-    // Move to the top-right most position of the diagonal
     while (row > 0 && col < size - 1) {
         row--;
         col++;
@@ -121,31 +108,36 @@ function checkDiagonalLine(id) {
     return false;
 }
 
-
 function positiondetector(id) {
     let element = document.getElementById(id);
 
     if (element.innerHTML === '') {
-        element.innerHTML = player; // Display the current player's symbol first
+        element.innerHTML = player;
 
-        // Now check for a winning condition or a draw
         if (checkHorizontalLine(id) || checkVerticalLine(id) || checkDiagonalLine(id)) {
+            if (player === 'x') {
+                playerXScore++;
+                localStorage.setItem('playerXScore', playerXScore);
+            } else {
+                playerOScore++;
+                localStorage.setItem('playerOScore', playerOScore);
+            }
+            updateScoreBoard();
             setTimeout(() => {
                 alert(`Le joueur ${player} a gagné !`);
-                restartGame();
-            }, 10); // Adding a slight delay to ensure the last move is shown
+                // restartGame();
+            }, 10);
         } else if (checkDraw()) {
             setTimeout(() => {
                 alert("Match nul !");
                 restartGame();
             }, 10);
         } else {
-            player = player === 'x' ? 'o' : 'x'; // Switch player
+            player = player === 'x' ? 'o' : 'x';
         }
         saveGameToStorage();
     }
 }
-
 
 function checkDraw() {
     return Array.from(document.getElementsByClassName('cell')).every(cell => cell.innerHTML !== '');
@@ -156,12 +148,20 @@ function restartGame() {
     player = 'x';
     saveGameToStorage();
 }
+
 function saveGameToStorage() {
     const cells = Array.from(document.getElementsByClassName('cell')).map(cell => cell.innerHTML);
     localStorage.setItem('ticTacToeState', JSON.stringify(cells));
     localStorage.setItem('ticTacToePlayer', player);
-    
-    //Creates an array of the current cell contents.
-    // Converts this array into a JSON string.
-    // Stores the JSON string in localStorage under the key 'ticTacToeState'
+}
+
+function loadScoresFromStorage() {
+    playerXScore = parseInt(localStorage.getItem('playerXScore')) || 0;
+    playerOScore = parseInt(localStorage.getItem('playerOScore')) || 0;
+    updateScoreBoard();
+}
+
+function updateScoreBoard() {
+    document.getElementById('scoreX').innerText = playerXScore;
+    document.getElementById('scoreO').innerText = playerOScore;
 }
