@@ -124,7 +124,7 @@ function positiondetector(id) {
             }
             updateScoreBoard();
             setTimeout(() => {
-                alert(`Le joueur ${player} a gagné !`);
+                // alert(`Le joueur ${player} a gagné !`);
                 // restartGame();
             }, 10);
         } else if (checkDraw()) {
