@@ -125,7 +125,7 @@ function positiondetector(id) {
             updateScoreBoard();
             setTimeout(() => {
                 alert(`Le joueur ${player} a gagné !`);
-                // restartGame();
+                restartGame();
             }, 10);
         } else if (checkDraw()) {
             setTimeout(() => {
